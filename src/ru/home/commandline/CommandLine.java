@@ -56,15 +56,15 @@ public class CommandLine {
     /**
      * Created by Alexey Altukhov on 13.09.2016.
      */
-    public class CommandDefine extends KeyAdapter {
+    private class CommandDefine extends KeyAdapter {
 
         // переменная для хранения последней введенной команды
-        String command = "";
+        private String command = "";
         // текущая директория
-        String currentPath = System.getProperty("user.dir");
+        private String currentPath = System.getProperty("user.dir");
 
-        int key;    // код нажатой клавиши
-        int pos = 0;    // позиция символа перевода строки \n в консоли
+        private int key;    // код нажатой клавиши
+        private int pos;    // позиция символа перевода строки \n в консоли
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -75,52 +75,65 @@ public class CommandLine {
             // если нажали клавишу enter
             if (key == 10){
 
-                if (pos == 0) {
+                // опредеояем позицию перевода строки
+                pos = console.getText().lastIndexOf("\n");
+
+                if (pos == -1) {
+                    // если это первая строка в консоли, то берем текст консоли
                     command = console.getText();
-                    pos = 1;
                 } else {
-                    pos = console.getText().lastIndexOf("\n");
+                    // иначе берем строку после последнего перевода строки
                     command = console.getText().substring(pos+1);
                 }
 
-                // pwd — выводит текущую директорию
-                if (command.equals("pwd")){
-                    // добавляем в консоль строку с директорией
-                    console.setText(console.getText()+"\n"+currentPath);
+                // если перед командой есть пробелы, удаляем их
+                while (command.length() > 0 && command.substring(0,1).equals(" ")){
+                    command = command.substring(1);
+                }
 
-                // dir — выводит список файлов в текущей директории
-                } else if (command.equals("dir")){
-                    // создаем ссылку на текущую папку
-                    File folder = new File(currentPath);
-                    // создаем список файлов и папок в текущей папке
-                    File[] listOfFiles = folder.listFiles();
+                if (!command.equals("")){
 
-                    // по порядку добавляем имена файлов и папок в консоль
-                    for (int i = 0; i < listOfFiles.length; i++) {
-                        console.setText(console.getText() + "\n" + listOfFiles[i].getName());
-                    }
+                    // pwd — выводит текущую директорию
+                    if (command.equals("pwd")){
+                        // добавляем в консоль строку с директорией
+                        console.setText(console.getText()+"\n"+currentPath);
 
-                // cd <путь> — перейти в директорию, путь к которой задан первым аргументом
-                } else if (command.substring(0,2).equals("cd")){
-                    if (command.length()>2) {
-                        // путь для перехода
-                        String perfectPath = command.substring(3);
-                        // создаем ссылку на этот путь
-                        File folder = new File(perfectPath);
-                        // и проверяем его существование
-                        if (folder.exists()) {
-                            // если путь найден, то сохраняем его как текущий
-                            currentPath = perfectPath;
+                        // dir — выводит список файлов в текущей директории
+                    } else if (command.equals("dir")){
+                        // создаем ссылку на текущую папку
+                        File folder = new File(currentPath);
+                        // создаем список файлов и папок в текущей папке
+                        File[] listOfFiles = folder.listFiles();
+
+                        // по порядку добавляем имена файлов и папок в консоль
+                        for (int i = 0; i < listOfFiles.length; i++) {
+                            console.setText(console.getText() + "\n" + listOfFiles[i].getName());
+                        }
+
+                        // cd <путь> — перейти в директорию, путь к которой задан первым аргументом
+                    } else if (command.length()>=2 && command.substring(0,2).equals("cd")){
+                        if (command.length()>2) {
+                            // путь для перехода
+                            String perfectPath = command.substring(3);
+                            // создаем ссылку на этот путь
+                            File folder = new File(perfectPath);
+                            // и проверяем его существование
+                            if (folder.exists()) {
+                                // если путь найден, то сохраняем его как текущий
+                                currentPath = perfectPath;
+                            } else {
+                                console.setText(console.getText() + "\n" + perfectPath + " путь не найден");
+                            }
                         } else {
-                            console.setText(console.getText() + "\n" + perfectPath + " путь не найден");
+                            // если команда cd указана без аргумента
+                            console.setText(console.getText() + "\n" + "Укажите путь к папке");
                         }
                     } else {
-                        // если команда cd указана без аргумента
-                        console.setText(console.getText() + "\n" + "Укажите путь к папке");
+                        console.setText(console.getText() + "\n" + command + " не является командой");
                     }
-                } else {
-                    console.setText(console.getText() + "\n" + command + " не является командой");
+
                 }
+
             }
 
         }
