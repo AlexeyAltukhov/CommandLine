@@ -75,7 +75,7 @@ public class CommandLine {
             // если нажали клавишу enter
             if (key == 10){
 
-                // опредеояем позицию перевода строки
+                // определяем позицию перевода строки
                 pos = console.getText().lastIndexOf("\n");
 
                 if (pos == -1) {
