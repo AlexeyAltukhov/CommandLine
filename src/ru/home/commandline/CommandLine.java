@@ -16,7 +16,7 @@ public class CommandLine {
     // добавляем полосу прокрутки для консоли
     JScrollPane sp = new JScrollPane(console);
 
-    CommandLine(){
+    public CommandLine(){
         // задаем схему для панели
         windowCommandLine.setLayout(new FlowLayout());
 
