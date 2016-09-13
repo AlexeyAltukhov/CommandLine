@@ -78,7 +78,6 @@ public class CommandLine {
                 if (pos == 0) {
                     command = console.getText();
                     pos = 1;
-                    //JOptionPane.showConfirmDialog(null, list.get(list.size() - 1), "Test", JOptionPane.PLAIN_MESSAGE);
                 } else {
                     pos = console.getText().lastIndexOf("\n");
                     command = console.getText().substring(pos+1);
