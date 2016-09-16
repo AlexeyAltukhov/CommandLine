@@ -11,13 +11,13 @@ import java.io.File;
  */
 public class CommandLine {
     // создаем панель для командной строки
-    JPanel windowCommandLine = new JPanel();
+    private JPanel windowCommandLine = new JPanel();
 
     // создаем область ввода команд(консоль), указываем кол-во строк и символов по умолчанию
-    JTextArea console = new JTextArea(20,50);
+    private JTextArea console = new JTextArea(20,50);
 
     // добавляем полосу прокрутки для консоли
-    JScrollPane sp = new JScrollPane(console);
+    private JScrollPane sp = new JScrollPane(console);
 
     public CommandLine(){
         // задаем схему для панели
@@ -25,6 +25,9 @@ public class CommandLine {
 
         // делаем автоматический перевод слов на новую строку в консоли
         console.setLineWrap(true);
+
+        // добавляем слушатель на консоль
+        console.addKeyListener(new CommandDefine());
 
         // добавляем полосу прокрутки с консолью на панель
         windowCommandLine.add(sp);
@@ -42,9 +45,6 @@ public class CommandLine {
         frame.setLocationRelativeTo(null);
         // завершаем программу при закрытии окна
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        CommandDefine commDef = new CommandDefine();
-        console.addKeyListener(commDef);
 
     }
 
@@ -73,7 +73,7 @@ public class CommandLine {
             //JOptionPane.showConfirmDialog(null, key, "Test", JOptionPane.PLAIN_MESSAGE);
 
             // если нажали клавишу enter
-            if (key == 10){
+            if (key == KeyEvent.VK_ENTER){
 
                 // определяем позицию перевода строки
                 pos = console.getText().lastIndexOf("\n");
@@ -91,15 +91,15 @@ public class CommandLine {
                     command = command.substring(1);
                 }
 
-                if (!command.equals("")){
+                if (!command.isEmpty()){
 
                     // pwd — выводит текущую директорию
-                    if (command.equals("pwd")){
+                    if ("pwd".equalsIgnoreCase(command)){
                         // добавляем в консоль строку с директорией
                         console.setText(console.getText()+"\n"+currentPath);
 
                         // dir — выводит список файлов в текущей директории
-                    } else if (command.equals("dir")){
+                    } else if ("dir".equalsIgnoreCase(command)){
                         // создаем ссылку на текущую папку
                         File folder = new File(currentPath);
                         // создаем список файлов и папок в текущей папке
@@ -111,7 +111,7 @@ public class CommandLine {
                         }
 
                         // cd <путь> — перейти в директорию, путь к которой задан первым аргументом
-                    } else if (command.length()>=2 && command.substring(0,2).equals("cd")){
+                    } else if (command.length()>=2 && "cd".equalsIgnoreCase(command.substring(0,2))){
                         if (command.length()>2) {
                             // путь для перехода
                             String perfectPath = command.substring(3);
