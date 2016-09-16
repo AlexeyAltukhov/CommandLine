@@ -27,7 +27,7 @@ public class CommandLine {
         console.setLineWrap(true);
 
         // добавляем слушатель на консоль
-        console.addKeyListener(new CommandDefine());
+        console.addKeyListener(new InputCommandListener());
 
         // добавляем полосу прокрутки с консолью на панель
         windowCommandLine.add(sp);
@@ -56,7 +56,7 @@ public class CommandLine {
     /**
      * Created by Alexey Altukhov on 13.09.2016.
      */
-    private class CommandDefine extends KeyAdapter {
+    private class InputCommandListener extends KeyAdapter {
 
         // переменная для хранения последней введенной команды
         private String command = "";
@@ -87,8 +87,8 @@ public class CommandLine {
                 }
 
                 // если перед командой есть пробелы, удаляем их
-                while (command.length() > 0 && command.substring(0,1).equals(" ")){
-                    command = command.substring(1);
+                if (command.length() > 0) {
+                    command = command.trim();
                 }
 
                 if (!command.isEmpty()){
@@ -106,8 +106,10 @@ public class CommandLine {
                         File[] listOfFiles = folder.listFiles();
 
                         // по порядку добавляем имена файлов и папок в консоль
-                        for (int i = 0; i < listOfFiles.length; i++) {
-                            console.setText(console.getText() + "\n" + listOfFiles[i].getName());
+                        if (listOfFiles != null && listOfFiles.length > 0){
+                            for (File file: listOfFiles) {
+                                console.setText(console.getText() + "\n" + file.getName());
+                            }
                         }
 
                         // cd <путь> — перейти в директорию, путь к которой задан первым аргументом
