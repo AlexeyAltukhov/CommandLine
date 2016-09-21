@@ -8,6 +8,11 @@ import java.io.File;
 
 /**
  * Created by Alexey Altukhov on 12.09.2016.
+ * Программа представляет собой вариант командной строки.
+ * Поддерживает следующие команды:
+ *  - dir — выводит список файлов в текущей директории
+ *  - cd «путь» — перейти в директорию, путь к которой задан первым аргументом
+ *  - pwd — выводит полный путь до текущей директории
  */
 public class CommandLine {
     // создаем панель для командной строки
@@ -19,7 +24,8 @@ public class CommandLine {
     // добавляем полосу прокрутки для консоли
     private JScrollPane sp = new JScrollPane(console);
 
-    public CommandLine(){
+    // инициализация консоли
+    private void initConsole(){
         // задаем схему для панели
         windowCommandLine.setLayout(new FlowLayout());
 
@@ -48,13 +54,9 @@ public class CommandLine {
 
     }
 
-    public static void main(String[] args) {
-        // создаем экземпляр класса CommandLine
-        CommandLine cmd = new CommandLine();
-    }
-
     /**
      * Created by Alexey Altukhov on 13.09.2016.
+     * inner class для прослушивания нажатий клавиш и выполнения команд
      */
     private class InputCommandListener extends KeyAdapter {
 
@@ -140,5 +142,10 @@ public class CommandLine {
 
         }
 
+    }
+    public static void main(String[] args) {
+        // создаем экземпляр класса CommandLine
+        CommandLine cmd = new CommandLine();
+        cmd.initConsole();
     }
 }
